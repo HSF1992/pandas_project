@@ -24,7 +24,7 @@ def 提取方法(url):
     for i in 链接:
         title = i.get("title")
         href = i.get("href")
-        if title != "影视同人" and title != "战争幻想" and title != "武侠修真" and  title != "动漫同人" and  title != "架空历史" and  title != "虚拟网游" and  title != "东方玄幻":
+        if title not in ["影视同人","战争幻想","武侠修真","动漫同人","架空历史","虚拟网游","东方玄幻"]:
             data.append({"书名":title,"链接":href})
     return data
 
