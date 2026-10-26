@@ -18,12 +18,12 @@ class 爬虫基类:
         soup = self.获取soup(url)
         数据 = 提取函数(soup,url)
 
-        下一页 = soup.find("li",class_="next")
+        下一页 = soup.find("a",id="next_page")
         if 下一页:
-            下一页网址 = urljoin("http:",下一页.find("a").get("href"))
+            下一页网址 = urljoin("http:",下一页.get("href"))
         else:
             下一页网址 = None
-
+        print(下一页)
         return 数据,下一页网址
 
     def 爬取多页(self,起始网址,提取函数,最多页数 = 1):
@@ -31,7 +31,7 @@ class 爬虫基类:
         当前网址 = 起始网址
         页数 = 0
 
-        while 当前网址 and 页数 < 最多页数:
+        while 当前网址 and 页数 <= 最多页数:
             页数 += 1
             数据,当前网址 = self.提取单页(当前网址,提取函数)
             所有数据.extend(数据)

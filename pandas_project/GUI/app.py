@@ -39,7 +39,7 @@ class app:
             self.booklist.delete(0,ctk.END)
             #j=1
             for i in self.数据:
-                self.booklist.insert(ctk.END,i["书名"])
+                self.booklist.insert("end",i["书名"])
                 #j+=1
             messagebox.showinfo("完成",f"共爬取{len(self.数据)}本书")
 
@@ -74,15 +74,15 @@ class app:
         self.textwd.geometry("600x800")
         self.t=ctk.CTkTextbox(self.textwd)
         self.t.pack(fill="both",expand=True)
-        global 网址
+        self.当前网址 = None
         for i in self.目录:
             if i["章节名"]==contentpoint:
-                网址=urljoin("http:",i["章节链接"])        
+                self.当前网址=urljoin("http:",i["章节链接"])        
         try:
-            self.段落=self.爬虫.爬取多页(网址,self.爬虫.提取正文,最多页数=1)
+            self.段落=self.爬虫.爬取多页(self.当前网址,self.爬虫.提取正文,最多页数=1)
            
             for i in self.段落:
-                self.t.insert(ctk.END,i+"\n")
+                self.t.insert("end",i)
                     
         except Exception as e:
             messagebox.showerror("错误",str(e))
@@ -90,13 +90,17 @@ class app:
 
     def 下一页(self):
         self.t.delete("1.0","end")
-        global 网址
-        list_text,下一页=self.爬虫.提取单页(网址,self.爬虫.提取正文)
-        网址=下一页
-        self.textwd.title("待定")
-        for i in list_text:
-            self.t.insert("end",i+"\n")
-
+        try:
+            list_text,下一页=self.爬虫.提取单页(self.当前网址,self.爬虫.提取正文)
+            if not 下一页:
+                messagebox.showinfo("提示","已经是最后一页了！")
+                return
+            self.当前网址=下一页
+            self.textwd.title("待定")
+            for i in list_text:
+                self.t.insert("end",i)
+        except Exception as e:
+            messagebox.showerror("错误",str(e))
 
 
     
